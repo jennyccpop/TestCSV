@@ -1,0 +1,33 @@
+package com.test.XmlToJson;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+public class XmlToJson {
+	public static void main(String[] args) throws Exception {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder documentBuilder = factory.newDocumentBuilder();
+		Document document = documentBuilder.parse("RECORD.xml");
+		NodeList bookList = document.getElementsByTagName("RECORD");
+		for (int i = 0; i < bookList.getLength(); i++) {
+			Node book = bookList.item(i);
+			NodeList bookChildList = book.getChildNodes();
+			for (int j = 0; j < bookChildList.getLength(); j++) {
+				Node childNode = bookChildList.item(j);
+				if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+					String nodeName = childNode.getNodeName();
+					try {
+						String nodeValue = childNode.getFirstChild().getNodeValue();
+						System.out.println(nodeName + "=" + nodeValue);
+					} catch (Exception e) {
+						System.out.println(nodeName);
+					}
+				}
+			}
+		}
+	}
+}
