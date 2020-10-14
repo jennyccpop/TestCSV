@@ -1,0 +1,49 @@
+package com.test.XmlToJson;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+public class XmlToJson {
+	public static void main(String[] args) throws Exception {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder documentBuilder = factory.newDocumentBuilder();
+		Document document = documentBuilder.parse("RECORD.xml");
+		NodeList bookList = document.getElementsByTagName("RECORD");
+//		System.out.println("book节点的个数：" + bookList.getLength());
+		for (int i = 0; i < bookList.getLength(); i++) {
+//			System.out.println("开始解析第 " + (i + 1) + " 个RECORD节点");
+			Node book = bookList.item(i);
+			NamedNodeMap attributes = book.getAttributes();
+//			System.out.println("\t该节点有 " + attributes.getLength() + " 个属性");
+			for (int j = 0; j < attributes.getLength(); j++) {
+				Node attr = attributes.item(j);
+				String attributeName = attr.getNodeName();
+				String attributeValue = attr.getNodeValue();
+				short nodeType = attr.getNodeType();
+//				System.out.println("\t节点类型为" + nodeType + ", 属性 " + attributeName + "=" + attributeValue);
+			}
+			Element element = (Element) book;
+//			System.out.println("\t直接获取TYPENAME的属性值 ： " + element.getAttribute("book"));
+			NodeList bookChildList = book.getChildNodes();
+//			System.out.println("该book节点一共有 " + bookChildList.getLength() + " 个子节点");
+			for (int j = 0; j < bookChildList.getLength(); j++) {
+				Node childNode = bookChildList.item(j);
+				if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+					String nodeName = childNode.getNodeName();
+					try {
+						String nodeValue = childNode.getFirstChild().getNodeValue();
+						System.out.println(nodeName + "=" + nodeValue);
+					} catch (Exception e) {
+						System.out.println(nodeName);
+					}
+				}
+			}
+		}
+	}
+}
